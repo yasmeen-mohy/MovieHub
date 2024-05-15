@@ -9,17 +9,34 @@ export const getAllMovies = createAsyncThunk(
   }
 );
 
-const allMoviesSlice = createSlice({
+
+const moviesSlice = createSlice({
   name: "movies",
-  initialState: { movies: [] },
+  initialState: {
+    movies: [],
+    favourits:[],
+    status: "idle",
+    error: null,
+  },
+  reducers: {
+    addToFav: (state,action)=>{
+      state.favourits.push(action.payload)
+    }
+  },
   extraReducers: (builder) => {
-    builder.addCase(getAllMovies.fulfilled, (state, action) => {
-      state.movies = action.payload;
-    });
-    builder.addCase(getAllMovies.rejected, (state, action) => {
-      console.log("Error fetching movies", action.error);
-    });
+    builder
+      .addCase(getAllMovies.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(getAllMovies.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.movies = action.payload;
+      })
+      .addCase(getAllMovies.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
-
-export default allMoviesSlice.reducer;
+export const { addToFav } = moviesSlice.actions; 
+export default moviesSlice.reducer;

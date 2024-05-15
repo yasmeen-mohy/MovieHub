@@ -3,11 +3,9 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 const SplashScreen = ({navigation}) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      // Navigate to the other screen after 5 seconds
       navigation.navigate('Home');
-    }, 5000); // 5000 milliseconds = 5 seconds
+    }, 5000);
 
-    // Clear the timer when the component unmounts or changes
     return () => clearTimeout(timer);
   }, []); 
     return (
