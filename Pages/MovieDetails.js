@@ -1,22 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView ,TouchableOpacity} from 'react-native';
 import AppBar from "../Components/MyAppBar";
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import StarRating from '../Components/StarRating';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToFav ,removeFromFav} from '../redux/store/slices/moviesSlice';
 
 const MovieDetails = ({ route ,navigation}) => {
     const { m } = route.params;
+    const dispatch = useDispatch();
+    const favourites = useSelector((state) => state.movies.favourites);
   const [movie, setMovie] = useState(null);
-
   const [isFavorited, setIsFavorited] = useState(false);
 
   const toggleFavorite = () => {
+    if (isFavorited) {
+      dispatch(removeFromFav(movie.id));
+    } else {
+      dispatch(addToFav(movie));
+    }
     setIsFavorited(!isFavorited);
   };
-
-  useEffect(() => {
+   useEffect(() => {
     setMovie(m);
-  }, [m]);
+    const isFav = favourites.some((favMovie) => favMovie.id === m.id);
+    setIsFavorited(isFav);
+  }, [m, favourites]);
 
   if (!movie) return <View><Text>Loading...</Text></View>;
   return (
@@ -32,13 +41,14 @@ const MovieDetails = ({ route ,navigation}) => {
   {/* <Text style={styles.title}>{movie.title}</Text> */}
   <View style={styles.iconContainer}>
   <TouchableOpacity onPress={toggleFavorite}>
-  <Icon
-    name={isFavorited ? 'heart' : 'heart-o'}
-    size={24}
-    color="red"
-    style={styles.icon}
-  />
-</TouchableOpacity>
+              <Icon
+                name={isFavorited ? 'heart' : 'heart-o'}
+                size={24}
+                color="red"
+                style={styles.icon}
+              />
+            </TouchableOpacity>
+            <StarRating style={{marginLeft:4}}rating={movie.vote_average} />
   </View>
 </View>
         {/* <Text style={styles.subtitle}> {movie.release_date}</Text> */}

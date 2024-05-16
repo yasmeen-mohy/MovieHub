@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { act } from "react";
 
 export const getAllMovies = createAsyncThunk(
   "movies/getAllMovies",
@@ -14,13 +15,16 @@ const moviesSlice = createSlice({
   name: "movies",
   initialState: {
     movies: [],
-    favourits:[],
+    favourites:[],
     status: "idle",
     error: null,
   },
   reducers: {
-    addToFav: (state,action)=>{
-      state.favourits.push(action.payload)
+    addToFav: (state, action) => {
+      state.favourites.push(action.payload);
+    },
+    removeFromFav:(state,action) =>{
+      state.favourites.filter((m)=>m.id!==action.payload)
     }
   },
   extraReducers: (builder) => {
@@ -38,5 +42,5 @@ const moviesSlice = createSlice({
       });
   },
 });
-export const { addToFav } = moviesSlice.actions; 
+export const { addToFav ,removeFromFav} = moviesSlice.actions; 
 export default moviesSlice.reducer;
