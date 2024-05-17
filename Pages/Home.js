@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   movieCont:{
-    width: "45%",
+    width:"45%",
     marginTop: 10,
     paddingHorizontal: 4,
   },
